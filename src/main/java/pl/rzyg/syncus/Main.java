@@ -8,7 +8,7 @@ public class Main {
     private static String getOSVersion() {
         String osName = System.getProperty("os.name");
         if (osName.toUpperCase().contains("WINDOWS")) {
-            return  "WINDOWS";
+            return "WINDOWS";
         } else if (osName.toUpperCase().contains("LIN")) {
             return "Linux";
         } else {
