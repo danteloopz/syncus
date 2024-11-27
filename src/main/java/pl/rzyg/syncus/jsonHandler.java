@@ -6,6 +6,8 @@ package pl.rzyg.syncus;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class jsonHandler {
     }
 
     //load in Windows config file
-    void winConfig() {
+    boolean winConfig() {
         try {
             //add path from built in config
             File jsonFile = new File(BuiltInConfig.getWindowsConfigFilesLocation());
@@ -46,13 +48,16 @@ public class jsonHandler {
             }
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
+            config = new Config("WINDOWS","1.0", new ArrayList<String[]>());
+            if (!writeConfig("Windows")){System.out.println("Could not create new config");}
         }
 
         config = gson.fromJson(json, Config.class);
+        return config.getOStype().equals("Windows");
     }
 
     //load in Linux config
-    void linConfig() {
+    boolean linConfig() {
         try {
             //add path from built in config
             File jsonFile = new File(BuiltInConfig.getLinuxConfigFilesLocation());
@@ -63,9 +68,44 @@ public class jsonHandler {
             }
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
+            config = new Config("LINUX","1.0", new ArrayList<String[]>());
+            if (!writeConfig("LINUX")){System.out.println("Could not create new config");}
         }
 
         config = gson.fromJson(json, Config.class);
+        return config.getOStype().equals("LINUX");
+    }
+
+    boolean writeConfig(String os) {
+        boolean success = false;
+        if (os.toUpperCase().equals("WINDOWS")) {
+            try {
+                File newFile = new File(BuiltInConfig.getWindowsConfigFilesLocation());
+                if (newFile.createNewFile()) {
+                    FileWriter myWriter = new FileWriter(BuiltInConfig.getWindowsConfigFilesLocation());
+                    myWriter.write(gson.toJson(config, Config.class));
+                    success = true;
+                }
+
+            } catch (IOException e) {
+                System.out.println("Error");
+                e.printStackTrace();
+            }
+        } else if (os.toUpperCase().equals("LINUX")) {
+            try {
+                File newFile = new File(BuiltInConfig.getLinuxConfigFilesLocation());
+                if (newFile.createNewFile()) {
+                    FileWriter myWriter = new FileWriter(BuiltInConfig.getLinuxConfigFilesLocation());
+                    myWriter.write(gson.toJson(config, Config.class));
+                    success = true;
+                }
+
+            } catch (IOException e) {
+                System.out.println("Error");
+                e.printStackTrace();
+            }
+        }
+        return success;
     }
 
 }
@@ -75,11 +115,11 @@ public class jsonHandler {
 // class for program config data structure
 class Config {
     private final String osType ;
-    private final String Version ;
+    private String Version ;
     private ArrayList<String[]> Files;
 
     public Config(String OS, String ConfigVersion, ArrayList<String[]> SyncFiles){
-        this.osType = OS;
+        this.osType = OS.toUpperCase();
         this.Version = ConfigVersion;
         this.Files = SyncFiles;
     }
@@ -92,12 +132,16 @@ class Config {
         return this.Version;
     }
 
+    void setConfigVersion(String version) {
+        this.Version = version;
+    }
+
     ArrayList<String[]> getFiles() {
         return this.Files;
     }
 
-    void setFiles(ArrayList<String[]> a) {
-        this.Files = a;
+    void setFiles(ArrayList<String[]> array) {
+        this.Files = array;
     }
 }
 
