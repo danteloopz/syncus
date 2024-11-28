@@ -31,7 +31,7 @@ public class jsonHandler {
                 BuiltInConfigJSON = BuiltInConfigJSON + FilesConfigurationReader.nextLine();
             }
 
-            this.BuiltInConfig = gson.fromJson(BuiltInConfigJSON, PrivateConfig.class);
+            this.BuiltInConfig = this.gson.fromJson(BuiltInConfigJSON, PrivateConfig.class);
 
         } catch (URISyntaxException | FileNotFoundException e) {e.printStackTrace();}
 
@@ -53,15 +53,15 @@ public class jsonHandler {
             File jsonFile = new File(this.BuiltInConfig.getWindowsConfigFilesLocation());
             Scanner fileReader = new Scanner(jsonFile);
             while (fileReader.hasNextLine()) {
-                json = json + fileReader.nextLine();
+                this.json = this.json + fileReader.nextLine();
             }
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
-            config = new Config("WINDOWS","1.0", new ArrayList<String[]>());
+            this.config = new Config("WINDOWS","1.0", new ArrayList<String[]>());
             if (!writeConfig("Windows")){System.out.println("Could not create new config");}
         }
 
-        config = gson.fromJson(json, Config.class);
+        this.config = this.gson.fromJson(json, Config.class);
         return this.config.getOStype().equals("Windows");
     }
 
@@ -69,30 +69,30 @@ public class jsonHandler {
     boolean linConfig() {
         try {
             //add path from built in config
-            File jsonFile = new File(BuiltInConfig.getLinuxConfigFilesLocation());
+            File jsonFile = new File(this.BuiltInConfig.getLinuxConfigFilesLocation());
             Scanner fileReader = new Scanner(jsonFile);
             while (fileReader.hasNextLine()) {
-                json = json + fileReader.nextLine();
+                this.json = this.json + fileReader.nextLine();
 
             }
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
-            config = new Config("LINUX","1.0", new ArrayList<String[]>());
+            this.config = new Config("LINUX","1.0", new ArrayList<String[]>());
             if (!writeConfig("LINUX")){System.out.println("Could not create new config");}
         }
 
-        config = gson.fromJson(json, Config.class);
-        return config.getOStype().equals("LINUX");
+        this.config = this.gson.fromJson(this.json, Config.class);
+        return this.config.getOStype().equals("LINUX");
     }
 
     boolean writeConfig(String os) {
         boolean success = false;
         if (os.equalsIgnoreCase("WINDOWS")) {
             try {
-                File newFile = new File(BuiltInConfig.getWindowsConfigFilesLocation());
+                File newFile = new File(this.BuiltInConfig.getWindowsConfigFilesLocation());
                 if (newFile.createNewFile()) {
-                    FileWriter myWriter = new FileWriter(BuiltInConfig.getWindowsConfigFilesLocation());
-                    myWriter.write(gson.toJson(config, Config.class));
+                    FileWriter myWriter = new FileWriter(this.BuiltInConfig.getWindowsConfigFilesLocation());
+                    myWriter.write(this.gson.toJson(this.config, Config.class));
                     success = true;
                 }
 
@@ -102,10 +102,10 @@ public class jsonHandler {
             }
         } else if (os.equalsIgnoreCase("LINUX")) {
             try {
-                File newFile = new File(BuiltInConfig.getLinuxConfigFilesLocation());
+                File newFile = new File(this.BuiltInConfig.getLinuxConfigFilesLocation());
                 if (newFile.createNewFile()) {
-                    FileWriter myWriter = new FileWriter(BuiltInConfig.getLinuxConfigFilesLocation());
-                    myWriter.write(gson.toJson(config, Config.class));
+                    FileWriter myWriter = new FileWriter(this.BuiltInConfig.getLinuxConfigFilesLocation());
+                    myWriter.write(this.gson.toJson(this.config, Config.class));
                     success = true;
                 }
 

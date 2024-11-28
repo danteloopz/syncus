@@ -2,6 +2,7 @@ package pl.rzyg.syncus;
 
 public class Main {
     public static void main(String[] args) {
+        Logger logger = new Logger(getOSVersion());
         if (args.length == 0) {
             //this will run the gui
             System.out.println("hehe");
@@ -23,6 +24,9 @@ public class Main {
                 case "-L":
                     //this will be the option to list tracked files
                     System.out.println("test");
+                    break;
+                case "-C":
+                    //the cli
                     break;
             }
         }
