@@ -2,5 +2,9 @@
   "Config": {
     "Windows":"C:/Program Files/syncus/config.json",
     "Linux": "/var/syncus/config.json"
+  },
+  "Logs": {
+    "Windows":"C:/Program Files/syncus/logs/",
+    "Linux": "/var/syncus/logs/"
   }
 }

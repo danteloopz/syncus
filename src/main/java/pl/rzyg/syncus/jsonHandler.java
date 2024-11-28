@@ -1,6 +1,6 @@
 package pl.rzyg.syncus;
 /* TODO:
-- add code to generate JSON config files when they weren't found (in FileNotFoundException)
+done - add code to generate JSON config files when they weren't found (in FileNotFoundException)
 - add cote to return Config file instance.
  */
 import com.google.gson.Gson;
@@ -31,17 +31,26 @@ public class jsonHandler {
                 BuiltInConfigJSON = BuiltInConfigJSON + FilesConfigurationReader.nextLine();
             }
 
-            BuiltInConfig = gson.fromJson(BuiltInConfigJSON, PrivateConfig.class);
+            this.BuiltInConfig = gson.fromJson(BuiltInConfigJSON, PrivateConfig.class);
 
         } catch (URISyntaxException | FileNotFoundException e) {e.printStackTrace();}
 
     }
-
+    String getLogs(String OS) {
+        if (OS.equals("WINDOWS")) {
+            return this.BuiltInConfig.getWindowsLogsLocation();
+        } else if (OS.equals("LINUX")) {
+            return this.BuiltInConfig.getLinuxLogsLocation();
+        }else {
+            System.out.println("Error recognizing os while getting logs location");
+            return "";
+        }
+    }
     //load in Windows config file
     boolean winConfig() {
         try {
             //add path from built in config
-            File jsonFile = new File(BuiltInConfig.getWindowsConfigFilesLocation());
+            File jsonFile = new File(this.BuiltInConfig.getWindowsConfigFilesLocation());
             Scanner fileReader = new Scanner(jsonFile);
             while (fileReader.hasNextLine()) {
                 json = json + fileReader.nextLine();
@@ -53,7 +62,7 @@ public class jsonHandler {
         }
 
         config = gson.fromJson(json, Config.class);
-        return config.getOStype().equals("Windows");
+        return this.config.getOStype().equals("Windows");
     }
 
     //load in Linux config
@@ -78,7 +87,7 @@ public class jsonHandler {
 
     boolean writeConfig(String os) {
         boolean success = false;
-        if (os.toUpperCase().equals("WINDOWS")) {
+        if (os.equalsIgnoreCase("WINDOWS")) {
             try {
                 File newFile = new File(BuiltInConfig.getWindowsConfigFilesLocation());
                 if (newFile.createNewFile()) {
@@ -91,7 +100,7 @@ public class jsonHandler {
                 System.out.println("Error");
                 e.printStackTrace();
             }
-        } else if (os.toUpperCase().equals("LINUX")) {
+        } else if (os.equalsIgnoreCase("LINUX")) {
             try {
                 File newFile = new File(BuiltInConfig.getLinuxConfigFilesLocation());
                 if (newFile.createNewFile()) {
@@ -148,9 +157,11 @@ class Config {
 // class for program files location data structure
 class PrivateConfig {
     private final ConfigFilesLocation CfgFiles;
+    private final LogFilesLocation logFiles;
 
-    public PrivateConfig(ConfigFilesLocation Config) {
+    public PrivateConfig(ConfigFilesLocation Config, LogFilesLocation Logs) {
         this.CfgFiles = Config;
+        this.logFiles = Logs;
     }
 
     //passing config location
@@ -158,9 +169,17 @@ class PrivateConfig {
         return this.CfgFiles.getWindows();
     }
 
+    String getWindowsLogsLocation() {
+        return this.logFiles.getWindows();
+    }
+
     //passing config location
     String getLinuxConfigFilesLocation() {
         return this.CfgFiles.getLinux();
+    }
+
+    String getLinuxLogsLocation() {
+        return this.logFiles.getLinux();
     }
 }
 
@@ -180,6 +199,26 @@ class ConfigFilesLocation {
     }
 
     //get windows configuration files location
+    String getWindows() {
+        return this.Windows;
+    }
+}
+
+class LogFilesLocation {
+    private final String Linux;
+    private final String Windows;
+
+    public LogFilesLocation(String lin, String win) {
+        this.Linux = lin;
+        this.Windows = win;
+    }
+
+    //get linux log files location
+    String getLinux() {
+        return this.Linux;
+    }
+
+    //get windows log files location
     String getWindows() {
         return this.Windows;
     }
