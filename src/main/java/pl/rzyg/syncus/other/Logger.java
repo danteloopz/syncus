@@ -1,4 +1,11 @@
-package pl.rzyg.syncus;
+package pl.rzyg.syncus.other;
+
+import pl.rzyg.syncus.jsonHandler;
+
+import java.io.File;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 /*
 * the Logger class
 *
@@ -12,6 +19,8 @@ public class Logger {
     public Logger(String OS) {
         logLocation = json.getLogs(OS);
         if (logLocation.isEmpty()) {System.exit(-1);}
+        Stream<String> log_files = Stream.of(Objects.requireNonNull(new File(logLocation).listFiles())).map(File::getName);
+        System.out.println(log_files);
     }
 
 }

@@ -1,11 +1,16 @@
 package pl.rzyg.syncus;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Main {
+    private static final Logger logger = LogManager.getLogger(Main.class);
+
     public static void main(String[] args) {
-        Logger logger = new Logger(getOSVersion());
+
         if (args.length == 0) {
             //this will run the gui
-            System.out.println("hehe");
+            logger.info("hehe");
         } else {
             switch (args[0].toUpperCase()) {
                 case "-D":
@@ -23,7 +28,7 @@ public class Main {
                     break;
                 case "-L":
                     //this will be the option to list tracked files
-                    System.out.println("test");
+
                     break;
                 case "-C":
                     //the cli
@@ -34,7 +39,7 @@ public class Main {
 
     }
     private static void printHelp() {
-        System.out.println("help");
+        logger.info("help");
     }
 
     private static String getOSVersion() {

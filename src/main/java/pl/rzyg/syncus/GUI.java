@@ -8,5 +8,4 @@ package pl.rzyg.syncus;
 * */
 
 public class GUI {
-
 }
