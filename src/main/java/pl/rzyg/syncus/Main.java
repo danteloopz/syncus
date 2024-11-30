@@ -10,7 +10,6 @@ public class Main {
 
         if (args.length == 0) {
             //this will run the gui
-            logger.info("hehe");
         } else {
             switch (args[0].toUpperCase()) {
                 case "-D":
@@ -39,7 +38,8 @@ public class Main {
 
     }
     private static void printHelp() {
-        logger.info("help");
+        System.out.println("help");
+        logger.info("help displayed");
     }
 
     private static String getOSVersion() {
