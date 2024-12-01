@@ -16,14 +16,15 @@ public class CLI {
 
     public CLI(String os) {
         this.OS = os;
-
-        if (os.equals("WINDOWS")) {json.winConfig();}
-        else if (os.equals("LINUX")) { json.linConfig();}
+        boolean config_load_check = false;
+        if (os.equals("WINDOWS")) {config_load_check =  json.winConfig();}
+        else if (os.equals("LINUX")) {config_load_check = json.linConfig();}
         else {
         logger.error("Unknown OS");
         System.out.println("CLI: Your OS is unknown. please contact help");
         }
-
+        if (!config_load_check) {logger.error("could not load config"); System.out.println("Error loading config");}
 
     }
+
 }
