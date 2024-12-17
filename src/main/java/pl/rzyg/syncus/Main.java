@@ -23,7 +23,7 @@ public class Main {
                     break;
                 case "-A":
                     //this will be the option to add a tracked directory/file
-                    fileTracker.
+
                     break;
                 case "-R":
                     //this will be to remove tracked directory/file
