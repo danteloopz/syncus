@@ -64,13 +64,13 @@ public class jsonHandler {
             }
         } catch (FileNotFoundException e) {
             out.println("file not found");
-            this.config = new Config("WINDOWS","1.0", new ArrayList<String[]>());
+            this.config = new Config("WINDOWS","1.0", new ArrayList<String[]>(), 60);
             if (!writeConfig("Windows")){
                 out.println("Could not create new config");}
         }
 
         this.config = this.gson.fromJson(json.toString(), Config.class);
-        return this.config.getOStype().equals("Windows");
+        return this.config.getOSType().equals("Windows");
     }
 
     //load in Linux config
@@ -85,13 +85,13 @@ public class jsonHandler {
             }
         } catch (FileNotFoundException e) {
             out.println("file not found");
-            this.config = new Config("LINUX","1.0", new ArrayList<String[]>());
+            this.config = new Config("LINUX","1.0", new ArrayList<String[]>(), 60);
             if (!writeConfig("LINUX")){
                 out.println("Could not create new config");}
         }
 
         this.config = this.gson.fromJson(this.json.toString(), Config.class);
-        return this.config.getOStype().equals("LINUX");
+        return this.config.getOSType().equals("LINUX");
     }
 
     boolean writeConfig(String os) {

@@ -5,17 +5,19 @@ import java.util.ArrayList;
 
 // class for program config data structure related to tracked files
 public class Config {
-    private final String osType ;
-    private String Version ;
-    private ArrayList<String[]> Files;
+    final String osType ;
+    String Version ;
+    ArrayList<String[]> Files;
+    int SyncRefreshSeconds ;
 
-    public Config(String OS, String ConfigVersion, ArrayList<String[]> SyncFiles){
+    public Config(String OS, String ConfigVersion, ArrayList<String[]> SyncFiles, int sec){
         this.osType = OS.toUpperCase();
         this.Version = ConfigVersion;
         this.Files = SyncFiles;
+        this.SyncRefreshSeconds = sec;
     }
 
-    public String getOStype() {
+    public String getOSType() {
         return this.osType;
     }
 
@@ -34,4 +36,6 @@ public class Config {
     public void setFiles(ArrayList<String[]> array) {
         this.Files = array;
     }
+
+    public int getRefresh() {return this.SyncRefreshSeconds;}
 }
