@@ -30,7 +30,7 @@ public class fileTracker {
                 logger.error("OS type not recognized");
                 System.out.println("Error: could not recognize os type");
         }
-        if (!succes) {
+        if (!success) {
             logger.error("couldn't save config file");
         }
         return success;
