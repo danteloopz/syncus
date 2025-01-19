@@ -23,14 +23,16 @@ def load_config():
     except:
         new_content = {
             "os": os.name,
+            "sync": 60,
             "paths": []
         }
         write_config(new_content)
         conf_content = new_content
+    config = json.loads(conf_content)
     if conf_content["name"] != os.name:
         print("this config is not for this os")
         exit(1)
-    return json.loads(conf_content)
+    return config
 
 def write_config(content):
     '''write config to json file'''
@@ -38,4 +40,20 @@ def write_config(content):
     json_config_file.write(json.dumps(content))
     json_config_file.close()
 
-print(load_config())
+def add_paths(orig_path, copy_path, config):
+    paths = config["paths"]
+    paths.append([orig_path, copy_path])
+    config["paths"] = paths
+    write_config(config)
+
+def del_paths(orig_path, copy_path, config):
+    paths = config["paths"]
+    paths.remove([orig_path, copy_path])
+    config["paths"] = paths
+    write_config(config)
+
+def set_sync_time(sec, config):
+    config["sync"] = sec
+    write_config(config)
+
+
