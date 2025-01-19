@@ -27,6 +27,9 @@ def load_config():
         }
         write_config(new_content)
         conf_content = new_content
+    if conf_content["name"] != os.name:
+        print("this config is not for this os")
+        exit(1)
     return json.loads(conf_content)
 
 def write_config(content):
