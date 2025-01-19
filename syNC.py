@@ -3,7 +3,7 @@
 ''' Script that allows you to sync your files in desired directories '''
 
 import os
-from os.path import isfile, join
+from os.path import isfile, join, getmtime
 import argparse
 import tempfile
 import shutil
@@ -18,13 +18,9 @@ def get_files(path):
     '''Return list of all files from the directory'''
     return [f for f in os.listdir(path) if isfile(join(path, f))]
 
-def modification_time(file_path):
+def modTime(file_path):
     '''Get the file modification time'''
-    stat = os.stat(file_path)
-    try:
-        return stat.st_birthtime
-    except AttributeError:
-        return stat.st_mtime
+    return getmtime(file_path)
 
 def compare_files(files1, files2, all_files):
     '''Compare all files'''
@@ -34,8 +30,8 @@ def compare_files(files1, files2, all_files):
         print(f"File: {file}", end=" ")
         # check if the file is in both directories
         if file in files1 and file in files2:
-            time1 = modification_time(files1[-1] + "/" + file)
-            time2 = modification_time(files2[-1] + "/" + file)
+            time1 = modTime(files1[-1] + "/" + file)
+            time2 = modTime(files2[-1] + "/" + file)
             time_diff = time1 - time2
 
             if time_diff > 0:
