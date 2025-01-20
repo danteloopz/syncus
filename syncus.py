@@ -85,16 +85,16 @@ def cp_file(src_path, copy_path):
             return
 
 def sync(src, copy):
+    src_name = os.path.basename(src)
     if os.path.isdir(src):
-        src_name = os.path.basename(src)
         if os.path.isdir(copy):
-            os.mkdir(copy + "/" + src_name)
+            os.makedirs(copy + "/" + src_name, exist_ok=True)
             dirlist = os.listdir(src)
             for rec in dirlist:
-                sync(src=src + dirlist[rec],copy=copy + dirlist[rec])
+                sync(src=src + rec,copy=copy + rec)
         else:
             copy_parent = os.path.dirname(copy)
-            os.mkdir(copy_parent + "/" + src_name)
+            os.makedirs(copy_parent + "/" + src_name, exist_ok=True)
 
     else:
         if os.path.isdir(copy):
@@ -108,7 +108,8 @@ def sync(src, copy):
 def sync_start(config):
     paths = config["paths"]
     for rec in paths:
-        thread = threading.Thread(target=sync, args=(paths[rec][0],paths[rec][1]))
+        thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
+        thread.run()
              
 
 
@@ -119,7 +120,8 @@ def main():
     logging.basicConfig(filename=os.path.join(log_dir, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
     config = load_config()
-    '''add_paths("c:/users/domin/dokumęty")'''
+    sync_start(config)
+
 
 if __name__ == '__main__':
     main()
