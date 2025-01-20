@@ -12,6 +12,10 @@ WARNING = '\033[93m'
 FAILRED = '\033[91m'
 ENDC = '\033[0m'
 
+def get_syncus_version():
+    ver = 1.0
+    return ver
+
 def modTime(file_path):
     '''Get the file modification time'''
     return os.path.getmtime(file_path)
