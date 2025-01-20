@@ -81,10 +81,12 @@ def cp_file(src_path, copy_path):
         copyT = modTime(copy_path)
         if copyT > srcT:
             try:
-                shutil.copyfile( src_path, copy_path, None, follow_symlinks=True)
+                shutil.copyfile( src_path, copy_path, follow_symlinks=True)
+                log.info("copying: " + src_path)
             except:
                 log.error("user doesn't have rights to: " + copy_path)
         else:
+            log.info("file wasn't modified: " + src_path)
             return
 
 def sync(src, copy):
@@ -100,7 +102,6 @@ def sync(src, copy):
         for rec in dirlist:
             sync(src=os.path.join(src, rec),copy=copy)
     else:
-        log.info("copying file" + src)
         cp_file(src, os.path.join(copy, src_name))
 
 
