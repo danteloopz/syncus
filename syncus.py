@@ -51,6 +51,9 @@ def write_config(content):
 
 def add_paths(orig_path, copy_path, config):
     paths = config["paths"]
+    if not(os.path.isdir(copy_path)):
+        log.error("given path is no a dir")
+        return
     paths.append([orig_path, copy_path])
     config["paths"] = paths
     write_config(config)
@@ -87,23 +90,19 @@ def cp_file(src_path, copy_path):
 def sync(src, copy):
     src_name = os.path.basename(src)
     if os.path.isdir(src):
-        if os.path.isdir(copy):
-            copy = os.path.join(copy, src_name)
-            os.makedirs(copy, exist_ok=True)
+        copy = os.path.join(copy, src_name)
+        os.makedirs(copy, exist_ok=True)
+        try:
             dirlist = os.listdir(src)
-            for rec in dirlist:
-                sync(src=os.path.join(src, rec),copy=os.path.join(copy, rec))
-        else:
-            copy_parent = os.path.dirname(copy)
-            os.makedirs(os.path.join(copy_parent, src_name), exist_ok=True)
-
+        except PermissionError:
+            log.error("user diesnt have premisions for: " + src)
+            return
+        for rec in dirlist:
+            sync(src=os.path.join(src, rec),copy=copy)
     else:
-        if os.path.isdir(copy):
-            log.info("copying file" + src)
-            cp_file(src, os.path.join(copy, src_name))
-        else:
-            copy_parent = os.path.dirname(copy)
-            cp_file(src, os.path.join(copy_parent, src_name))
+        log.info("copying file" + src)
+        cp_file(src, os.path.join(copy, src_name))
+
 
 
 def sync_start(config):
