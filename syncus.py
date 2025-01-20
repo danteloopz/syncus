@@ -70,7 +70,7 @@ def cp_file(src_path, copy_path):
         copy_file = open(copy_path)
     except:
         try:
-            shutil.copyfile( src_path, copy_path, None, follow_symlinks=True)
+            shutil.copyfile( src_path, copy_path, follow_symlinks=True)
         except:
             log.error("user doesn't have rights to: " + copy_path)
     else:    
@@ -88,7 +88,8 @@ def sync(src, copy):
     src_name = os.path.basename(src)
     if os.path.isdir(src):
         if os.path.isdir(copy):
-            os.makedirs(copy + "/" + src_name, exist_ok=True)
+            copy = os.path.join(copy, src_name)
+            os.makedirs(copy, exist_ok=True)
             dirlist = os.listdir(src)
             for rec in dirlist:
                 sync(src=os.path.join(src, rec),copy=os.path.join(copy, rec))
