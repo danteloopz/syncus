@@ -3,6 +3,8 @@ import argparse
 import shutil
 import threading
 import json
+import logging
+log = logging.getLogger(__name__)
 
 # Set terminal ANSI code colors
 OKGREEN = '\033[92m'
@@ -30,7 +32,7 @@ def load_config():
         conf_content = new_content
     config = json.loads(conf_content)
     if conf_content["name"] != os.name:
-        print("this config is not for this os")
+        log.error("this config is not for this os")
         exit(1)
     return config
 
@@ -56,4 +58,16 @@ def set_sync_time(sec, config):
     config["sync"] = sec
     write_config(config)
 
+def sync(config):
+    paths = config["paths"]
+    for rec in paths:
+        src = rec[0]
+        copy = rec[1]
 
+
+def main():
+    logging.basicConfig(filename="syncus.log", level=logging.INFO)
+    log.info("started syncus")
+
+if __name__ == '__main__':
+    main()
