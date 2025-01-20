@@ -23,11 +23,12 @@ def check_os(config):
 
 def load_config():
     '''Load config from json file'''
-    try:
-        json_config_file = open("./config.json")
+    log_path = "./config.json"
+    if os.path.exists(log_path):
+        json_config_file = open(log_path)
         conf_content = json_config_file.read()
         json_config_file.close()
-    except:
+    else:
         new_content = {
             "os": os.name,
             "sync": 60,
@@ -112,7 +113,10 @@ def sync_start(config):
 
 
 def main():
-    logging.basicConfig(filename="./log/syncus.log", level=logging.INFO)
+    log_dir = "./log"
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    logging.basicConfig(filename=os.path.join(log_dir, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
     config = load_config()
     '''add_paths("c:/users/domin/dokumęty")'''
