@@ -91,18 +91,18 @@ def sync(src, copy):
             os.makedirs(copy + "/" + src_name, exist_ok=True)
             dirlist = os.listdir(src)
             for rec in dirlist:
-                sync(src=src + rec,copy=copy + rec)
+                sync(src=os.path.join(src, rec),copy=os.path.join(copy, rec))
         else:
             copy_parent = os.path.dirname(copy)
-            os.makedirs(copy_parent + "/" + src_name, exist_ok=True)
+            os.makedirs(os.path.join(copy_parent, src_name), exist_ok=True)
 
     else:
         if os.path.isdir(copy):
             log.info("copying file" + src)
-            cp_file(src, copy + src_name)
+            cp_file(src, os.path.join(copy, src_name))
         else:
             copy_parent = os.path.dirname(copy)
-            cp_file(src, copy_parent + src_name)
+            cp_file(src, os.path.join(copy_parent, src_name))
 
 
 def sync_start(config):
