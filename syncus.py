@@ -82,7 +82,9 @@ def sync(src, copy):
         src_name = os.path.basename(src)
         if os.path.isdir(copy):
             os.mkdir(copy + "/" + src_name)
-
+            dirlist = os.listdir(src)
+            for rec in dirlist:
+                sync(src=src + dirlist[rec],copy=copy + dirlist[rec])
         else:
             copy_parent = os.path.dirname(copy)
             os.mkdir(copy_parent + "/" + src_name)
@@ -99,7 +101,7 @@ def sync(src, copy):
 def sync_start(config):
     paths = config["paths"]
     for rec in paths:
-        thread = threading.Thread(target=sync, args=(rec[1],rec[2]))
+        thread = threading.Thread(target=sync, args=(paths[rec][0],paths[rec][1]))
              
 
 
