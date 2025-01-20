@@ -29,9 +29,9 @@ def load_config():
             "paths": []
         }
         write_config(new_content)
-        conf_content = new_content
+        config = new_content
     config = json.loads(conf_content)
-    if conf_content["name"] != os.name:
+    if config["os"] != os.name:
         log.error("this config is not for this os")
         exit(1)
     return config
@@ -106,8 +106,10 @@ def sync_start(config):
 
 
 def main():
-    logging.basicConfig(filename="log/syncus.log", level=logging.INFO)
+    logging.basicConfig(filename="./log/syncus.log", level=logging.INFO)
     log.info("started syncus")
+    config = load_config()
+    '''add_paths("c:/users/domin/dokumęty")'''
 
 if __name__ == '__main__':
     main()
