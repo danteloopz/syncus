@@ -58,15 +58,53 @@ def set_sync_time(sec, config):
     config["sync"] = sec
     write_config(config)
 
-def sync(config):
+def cp_file(src_path, copy_path):
+    try:
+        copy_file = open(copy_path)
+    except:
+        try:
+            shutil.copyfile( src_path, copy_path, None, follow_symlinks=True)
+        except:
+            log.error("user doesn't have rights to: " + copy_path)
+    else:    
+        srcT = modTime(src_path)
+        copyT = modTime(copy_path)
+        if copyT > srcT:
+            try:
+                shutil.copyfile( src_path, copy_path, None, follow_symlinks=True)
+            except:
+                log.error("user doesn't have rights to: " + copy_path)
+        else:
+            return
+
+def sync(src, copy):
+    if os.path.isdir(src):
+        src_name = os.path.basename(src)
+        if os.path.isdir(copy):
+            os.mkdir(copy + "/" + src_name)
+
+        else:
+            copy_parent = os.path.dirname(copy)
+            os.mkdir(copy_parent + "/" + src_name)
+
+    else:
+        if os.path.isdir(copy):
+            log.info("copying file" + src)
+            cp_file(src, copy + src_name)
+        else:
+            copy_parent = os.path.dirname(copy)
+            cp_file(src, copy_parent + src_name)
+
+
+def sync_start(config):
     paths = config["paths"]
     for rec in paths:
-        src = rec[0]
-        copy = rec[1]
+        thread = threading.Thread(target=sync, args=(rec[1],rec[2]))
+             
 
 
 def main():
-    logging.basicConfig(filename="syncus.log", level=logging.INFO)
+    logging.basicConfig(filename="log/syncus.log", level=logging.INFO)
     log.info("started syncus")
 
 if __name__ == '__main__':
