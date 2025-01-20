@@ -39,9 +39,7 @@ def load_config():
         return config
 
     config = json.loads(conf_content)
-    if conf_content["name"] != os.name:
-        log.error("this config is not for this os")
-        exit(1)
+    check_os(config)
     return config
 
 def write_config(content):
