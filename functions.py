@@ -1,5 +1,4 @@
 import os
-import argparse
 import shutil
 import threading
 import json
@@ -11,6 +10,15 @@ OKGREEN = '\033[92m'
 WARNING = '\033[93m'
 FAILRED = '\033[91m'
 ENDC = '\033[0m'
+
+def ok(mess):
+    print(OKGREEN + "[+] " + mess + ENDC)
+
+def warn(mess):
+    print(WARNING + "[!] " + mess + ENDC)
+
+def fail(mess):
+    print(FAILRED + "[-] " + mess + ENDC)
 
 def get_syncus_version():
     ver = 1.0
@@ -108,23 +116,8 @@ def sync(src, copy):
     else:
         cp_file(src, os.path.join(copy, src_name))
 
-
-
 def sync_start(config):
     paths = config["paths"]
     for rec in paths:
         thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
         thread.run()
-             
-def main():
-    log_dir = "./log"
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    logging.basicConfig(filename=os.path.join(log_dir, "syncus.log"), level=logging.INFO)
-    log.info("started syncus")
-    config = load_config()
-    sync_start(config)
-
-
-if __name__ == '__main__':
-    main()
