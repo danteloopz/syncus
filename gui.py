@@ -20,7 +20,7 @@ def hyperlink(text, address):
     hyperlink = dpg.add_button(
         label=text, callback=lambda: webbrowser.open(address))
     dpg.bind_item_theme(hyperlink, "hyperlinkTheme")
-    dpg.bind_item_font(hyperlink, link_font)
+    #dpg.bind_item_font(hyperlink, link_font)
 
 def logo():
     width, height, channels, data = dpg.load_image(LOGO)

@@ -5,12 +5,21 @@ def run_GUI():
     ok("GUI version started")
     file_selector()
     with dpg.window(tag="Root"):
+        dpg.add_spacer(height=10)
         new_dir("Katalog A")
         new_dir("Katalog B")
         settings()
         advanced_settings()
         current_sync()
-        credits()
+        dpg.add_spacer(height=5), dpg.add_separator()
+        with dpg.group(horizontal=True):
+            dpg.add_spacer(width=(WIDTH - 1 * 75) / 2)
+
+            hyperlink("<Github>", "https://github.com/danteloopz/syncus/")
+            credits()
+
+
+
     dpg.set_primary_window("Root", True)
     dpg.create_viewport(title='Syncus', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
     dpg.setup_dearpygui()
