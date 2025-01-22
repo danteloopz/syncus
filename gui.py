@@ -1,13 +1,27 @@
+import dearpygui.dearpygui as dpg
+from themes import setup_themes
+from functions import *
+import webbrowser
+
+WIDTH = 550
+HEIGHT = 800
+
+dpg.create_context()
+setup_themes()
+
 def callback(sender, app_data, user_data):
     print("Sender: ", sender)
     print("App Data: ", app_data)
 
+def hyperlink(text, address):
+    hyperlink = dpg.add_button(
+        label=text, callback=lambda: webbrowser.open(address))
+    dpg.bind_item_theme(hyperlink, "hyperlinkTheme")
+    dpg.bind_item_font(hyperlink, link_font)
+
 def run_GUI():
 
     width, height, channels, data = dpg.load_image("logo.jpg")
-    #scale = 0.25
-    #width = round(width * scale) 
-    #height = round(height * scale) 
     with dpg.texture_registry(show=False):
         dpg.add_static_texture(width=width, height=height, default_value=data, tag="texture_tag")
 
@@ -58,23 +72,3 @@ def run_GUI():
         dpg.add_text("Credits")
         with dpg.tooltip(dpg.last_item()):
             dpg.add_text("Dominik Burnog, Michal Smietana, Adam Lukasik, Hubert Wrobel")
-
-
-
-
-
-if __name__ == '__main__':
-    import dearpygui.dearpygui as dpg
-    from syncus import *
-
-    dpg.create_context()
-    dpg.create_viewport(title='Syncus', width=1000, height=600)
-    run_GUI()
-
-    dpg.set_primary_window("Primary Window", True)
-
-    dpg.setup_dearpygui()
-    dpg.show_viewport()
-    dpg.start_dearpygui()
-    dpg.destroy_context()
-

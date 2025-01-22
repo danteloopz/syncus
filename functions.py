@@ -116,8 +116,6 @@ def sync_start(config):
         thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
         thread.run()
              
-
-
 def main():
     log_dir = "./log"
     if not os.path.exists(log_dir):
