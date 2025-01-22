@@ -3,8 +3,14 @@ import argparse
 
 def run_GUI():
     ok("GUI version started")
+    file_selector()
     with dpg.window(tag="Root"):
-        pass
+        new_dir("Katalog A")
+        new_dir("Katalog B")
+        settings()
+        advanced_settings()
+        current_sync()
+        credits()
     dpg.set_primary_window("Root", True)
     dpg.create_viewport(title='Syncus', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
     dpg.setup_dearpygui()

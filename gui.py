@@ -7,6 +7,7 @@ WIDTH = 1000
 HEIGHT = 600 
 LOG_DIR = "./log"
 ICON = "./imgs/appicon.ico"
+LOGO = "./imgs/logo.jpg"
 
 dpg.create_context()
 setup_themes()
@@ -22,9 +23,10 @@ def hyperlink(text, address):
     dpg.bind_item_font(hyperlink, link_font)
 
 def logo():
-    width, height, channels, data = dpg.load_image("logo.jpg")
+    width, height, channels, data = dpg.load_image(LOGO)
     with dpg.texture_registry(show=False):
         dpg.add_static_texture(width=width, height=height, default_value=data, tag="logo")
+    dpg.add_image("logo")
 
 def credits():
     dpg.add_text("Credits")
@@ -40,18 +42,19 @@ def file_selector():
         dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
 
 def new_dir(label):
-   with dpg.group(horizontal=True):
-            dpg.add_input_text(label=label, callback=callback)
-            with dpg.group(horizontal=True):
-                dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item("file_dialog_id"))
+    with dpg.group(horizontal=True):
+        dpg.add_input_text(label=label, callback=callback)
+        with dpg.group(horizontal=True):
+            dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item("file_dialog_id"))
 
 def current_sync():
     with dpg.collapsing_header(label="Aktualne synchronizacje"):
-            pass
+         with dpg.tree_node(label="Help (READ ME FIRST)"):
+             pass
 
 def settings():
     dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=3, callback=callback)
-    dpg.add_slider_int(label="Czestotliwosc synchronizacji (ile razy na sek.)", max_value=60, callback=callback)
+    dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback)
     dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback)
     dpg.add_button(label="Dodaj", callback=callback)
 
