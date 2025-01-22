@@ -13,15 +13,15 @@ def run_GUI():
         current_sync()
         dpg.add_spacer(height=5), dpg.add_separator()
         with dpg.group(horizontal=True):
-            dpg.add_spacer(width=(WIDTH - 1 * 75) / 2)
+            dpg.add_spacer(width=(WIDTH - 100) / 2)
 
-            hyperlink("<Github>", "https://github.com/danteloopz/syncus/")
+            #hyperlink("<Github>", "https://github.com/danteloopz/syncus/")
             credits()
 
 
 
     dpg.set_primary_window("Root", True)
-    dpg.create_viewport(title='Syncus', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
+    dpg.create_viewport(title='Syncus - najlepsza aplikacja do synchronizacji plików', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
     dpg.setup_dearpygui()
     dpg.show_viewport()
     dpg.start_dearpygui()

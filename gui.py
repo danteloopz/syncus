@@ -53,7 +53,7 @@ def current_sync():
              pass
 
 def settings():
-    dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=3, callback=callback)
+    dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback)
     dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback)
     dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback)
     dpg.add_button(label="Dodaj", callback=callback)
