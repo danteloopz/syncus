@@ -2,6 +2,7 @@ test/
 config.json
 log/
 demo.py
+bin/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
