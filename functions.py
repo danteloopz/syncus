@@ -20,6 +20,8 @@ def warn(mess):
 def fail(mess):
     print(FAILRED + "[-] " + mess + ENDC)
 
+
+#co to w ogule za funkcja
 def get_syncus_version():
     ver = 1.0
     return ver
