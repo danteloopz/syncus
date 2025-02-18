@@ -15,8 +15,6 @@ def run_GUI():
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=(WIDTH - 100) / 2)
             hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
-        dpg.add_button(label="Old Label", tag="my_button")
-        dpg.add_button(label="Change Name", callback=change_label)
 
 
 
