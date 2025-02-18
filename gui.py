@@ -68,6 +68,6 @@ def settings():
 def advanced_settings():
     with dpg.collapsing_header(label="Ustawienia ogolne"):
         dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback)
-        dpg.add_slider_int(label="Czestotliwość synchronizacji (co ile min.)", max_value=60, callback=callback)
+        dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback)
         dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback)
        
