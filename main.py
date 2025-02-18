@@ -14,9 +14,7 @@ def run_GUI():
         dpg.add_spacer(height=5), dpg.add_separator()
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=(WIDTH - 100) / 2)
-
-            #hyperlink("<Github>", "https://github.com/danteloopz/syncus/")
-            credits()
+            hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
 
 
 
