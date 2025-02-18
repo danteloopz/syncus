@@ -43,18 +43,26 @@ def hyperlink(text, address):
     dpg.bind_item_font(hyperlink, link_font)
 
 def file_selector():
-    with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="file_dialog_id", width=700 ,height=400):
+    with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="kat_a_selector", width=700 ,height=400):
         dpg.add_file_extension(".*")
         dpg.add_file_extension("", color=(150, 255, 150, 255))
         dpg.add_file_extension("Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}", color=(0, 255, 255, 255))
         dpg.add_file_extension(".h", color=(255, 0, 255, 255), custom_text="[header]")
         dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
 
+    with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="kat_b_selector", width=700 ,height=400):
+        dpg.add_file_extension(".*")
+        dpg.add_file_extension("", color=(150, 255, 150, 255))
+        dpg.add_file_extension("Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}", color=(0, 255, 255, 255))
+        dpg.add_file_extension(".h", color=(255, 0, 255, 255), custom_text="[header]")
+        dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
+
+
 def new_dir(label, tag):
     with dpg.group(horizontal=True):
         dpg.add_input_text(label=label, callback=callback, tag=tag)
         with dpg.group(horizontal=True):
-            dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item("file_dialog_id"))
+            dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item(tag + "_selector"))
 
 def current_sync():
     with dpg.collapsing_header(label="Aktualne synchronizacje"):
