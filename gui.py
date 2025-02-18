@@ -66,6 +66,7 @@ def new_dir(label, tag):
 
 def current_sync():
     with dpg.collapsing_header(label="Aktualne synchronizacje"):
+        #sync_table()
         pass
 
 def buttons():
@@ -78,6 +79,33 @@ def settings():
         dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback, tag="sync_type")
         dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback, tag="sync_freq")
         dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback, tag="sync_status")
-       
+
 def change_label():
     dpg.configure_item("my_button", label="New Label")
+
+def table_update():
+    config = load_config()
+    paths = config["paths"]
+
+    children = dpg.get_item_children("crossont")
+    print(children)
+    if children.__len__() > 0:
+        for child in children:
+           dpg.delete_item(child)
+
+    for rec in paths:
+        with dpg.table_row:
+            dpg.add_text(rec[0])
+            dpg.add_text(rec[1])
+
+def sync_table():
+    config = load_config()
+    paths = config["paths"]
+    with dpg.table(header_row=True, label="table", tag="crossont"):
+        dpg.add_table_column(label="src")
+        dpg.add_table_column(label="dest")
+        for rec in paths:
+            with dpg.table_row:
+               dpg.add_text(rec[0])
+               dpg.add_text(rec[1])
+

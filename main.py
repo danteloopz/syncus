@@ -46,10 +46,15 @@ if __name__ == '__main__':
     logging.basicConfig(filename=os.path.join(LOG_DIR, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
     config = load_config()
-    sync_start(config)
+    #sync_start(config)
 
     if args.cli:
         run_CLI()
     else:
+        conf = load_config()
+        print(conf)
+        add_paths("/home/dominik","/home/dominik/Pulpit",conf)
+        conf = load_config()
+        print(conf)
         run_GUI()
     
