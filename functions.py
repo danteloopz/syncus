@@ -111,7 +111,7 @@ def sync(src, copy):
         try:
             dirlist = os.listdir(src)
         except PermissionError:
-            log.error("user diesnt have premisions for: " + src)
+            log.error("user doesn't have permissions for: " + src)
             return
         for rec in dirlist:
             sync(src=os.path.join(src, rec),copy=copy)

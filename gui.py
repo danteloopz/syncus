@@ -50,9 +50,9 @@ def file_selector():
         dpg.add_file_extension(".h", color=(255, 0, 255, 255), custom_text="[header]")
         dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
 
-def new_dir(label):
+def new_dir(label, tag):
     with dpg.group(horizontal=True):
-        dpg.add_input_text(label=label, callback=callback)
+        dpg.add_input_text(label=label, callback=callback, tag=tag)
         with dpg.group(horizontal=True):
             dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item("file_dialog_id"))
 
@@ -60,14 +60,16 @@ def current_sync():
     with dpg.collapsing_header(label="Aktualne synchronizacje"):
         pass
 
-def settings():
+def buttons():
     with dpg.group(horizontal=True):
-        dpg.add_button(label="Dodaj", callback=callback)
-        dpg.add_button(label="Usun", callback=callback)
+        dpg.add_button(label="Dodaj", callback=callback, tag="add")
+        dpg.add_button(label="Usun", callback=callback, tag="del")
 
-def advanced_settings():
+def settings():
     with dpg.collapsing_header(label="Ustawienia ogolne"):
-        dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback)
-        dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback)
-        dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback)
+        dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback, tag="sync_type")
+        dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback, tag="sync_freq")
+        dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback, tag="sync_status")
        
+def change_label():
+    dpg.configure_item("my_button", label="New Label")

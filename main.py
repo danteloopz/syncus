@@ -6,15 +6,17 @@ def run_GUI():
     file_selector()
     with dpg.window(tag="Root"):
         dpg.add_spacer(height=10)
-        new_dir("Katalog A")
-        new_dir("Katalog B")
+        new_dir("Katalog A", "kat_a")
+        new_dir("Katalog B", "kat_b")
+        buttons()
         settings()
-        advanced_settings()
         current_sync()
         dpg.add_spacer(height=5), dpg.add_separator()
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=(WIDTH - 100) / 2)
             hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
+        dpg.add_button(label="Old Label", tag="my_button")
+        dpg.add_button(label="Change Name", callback=change_label)
 
 
 
