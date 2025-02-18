@@ -43,19 +43,27 @@ def hyperlink(text, address):
     dpg.bind_item_font(hyperlink, link_font)
 
 def file_selector():
-    with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="kat_a_selector", width=700 ,height=400):
+    with dpg.file_dialog(directory_selector=True, show=False, callback=update_text_input, id="kat_a_selector", width=700 ,height=400):
         dpg.add_file_extension(".*")
         dpg.add_file_extension("", color=(150, 255, 150, 255))
         dpg.add_file_extension("Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}", color=(0, 255, 255, 255))
         dpg.add_file_extension(".h", color=(255, 0, 255, 255), custom_text="[header]")
         dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
 
-    with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="kat_b_selector", width=700 ,height=400):
+    with dpg.file_dialog(directory_selector=True, show=False, callback=update_text_input, id="kat_b_selector", width=700 ,height=400):
         dpg.add_file_extension(".*")
         dpg.add_file_extension("", color=(150, 255, 150, 255))
         dpg.add_file_extension("Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}", color=(0, 255, 255, 255))
         dpg.add_file_extension(".h", color=(255, 0, 255, 255), custom_text="[header]")
         dpg.add_file_extension(".py", color=(0, 255, 0, 255), custom_text="[Python]")
+
+
+def update_text_input(sender, app_data, user_data):
+    """Updates the input text field with the selected directory path."""
+    receiver_tag = sender[:-9]
+    dpg.set_value(receiver_tag, str(app_data["file_path_name"]))
+    #print(receiver_tag, app_data["file_path_name"])
+
 
 
 def new_dir(label, tag):
@@ -78,6 +86,3 @@ def settings():
         dpg.add_listbox(("Powiel", "Scal"), label="Typ synchronizacji", num_items=2, callback=callback, tag="sync_type")
         dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback, tag="sync_freq")
         dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback, tag="sync_status")
-       
-def change_label():
-    dpg.configure_item("my_button", label="New Label")
