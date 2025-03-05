@@ -118,8 +118,16 @@ def sync(src, copy):
     else:
         cp_file(src, os.path.join(copy, src_name))
 
-def sync_start(config):
+def sync_start(config, type):
     paths = config["paths"]
-    for rec in paths:
-        thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
-        thread.run()
+    if type=="scal":
+        for rec in paths:
+            thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
+            thread.run()
+    if type=="powiel":
+        if type=="scal":
+            for rec in paths:
+                thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
+                thread.run()
+                thread2 = threading.Thread(target=sync, args=(rec[1],rec[0]))
+                thread2.run()

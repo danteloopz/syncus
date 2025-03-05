@@ -8,7 +8,7 @@ HEIGHT = 600
 LOG_DIR = "./log"
 ICON = "./imgs/appicon.ico"
 LOGO = "./imgs/logo.jpg"
-
+sync_type_var = "powiel"
 
 dpg.create_context()
 setup_themes()
@@ -35,6 +35,13 @@ def callback(sender, app_data, user_data):
     if sender=="del":
         del_paths(dpg.get_value("kat_a"),dpg.get_value("kat_b"),load_config())
         table_update()
+    if sender=="sync_type":
+        if app_data=="Powiel":
+            sync_type_var="powiel"
+        if app_data=="Scal":
+            sync_type_var="scal"
+    if sender=="sync":
+        sync_start(load_config, sync_type_var)
 
 dpg.bind_font(main_font)
 
@@ -92,6 +99,7 @@ def buttons():
     with dpg.group(horizontal=True):
         dpg.add_button(label="Dodaj", callback=callback, tag="add")
         dpg.add_button(label="Usun", callback=callback, tag="del")
+        dpg.add_button(label="Synchronizuj", callback=callback, tag="sync")
 
 def settings():
     with dpg.collapsing_header(label="Ustawienia ogolne"):
@@ -143,7 +151,6 @@ def sync_table():
         tag="table_update_button",
         callback=table_update
     )
-    add_paths("./imgs", "./imgs", config)
     table_update()
 
 
