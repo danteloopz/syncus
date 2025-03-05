@@ -92,28 +92,53 @@ def change_label():
     dpg.configure_item("my_button", label="New Label")
 
 def table_update():
-    config = load_config()
-    paths = config["paths"]
+    pass
+    #config = load_config()
+    #paths = config["paths"]
 
-    children = dpg.get_item_children("crossont")
-    print(children)
-    if children.__len__() > 0:
-        for child in children:
-           dpg.delete_item(child)
+    #children = dpg.get_item_children("table")
 
-    for rec in paths:
-        with dpg.table_row:
-            dpg.add_text(rec[0])
-            dpg.add_text(rec[1])
+    #print(children)
+    #if dpg.does_item_exist("table"):
+    #    dpg.delete_item("table")
 
+    #with dpg.table(header_row=True, label="table", tag="table"):
+    #    dpg.add_table_column(label="src")
+    #    dpg.add_table_column(label="dest")
+    #    for rec in paths:
+    #        with dpg.table_row():
+    #            for i in range(0, 2):
+    #                dpg.add_text(rec[i])
+
+                #dpg.add_text("Newly")
+                #dpg.add_text("Added")
+
+
+    #if children.__len__() > 0:
+    ##    for child in children:
+    ##       dpg.delete_item(child)
+
+    #for rec in paths:
+    #        with dpg.table_row():
+    #            for i in range(0, 2):
+    #                dpg.add_text(rec[i])
+    
 def sync_table():
     config = load_config()
     paths = config["paths"]
-    with dpg.table(header_row=True, label="table", tag="crossont"):
+    with dpg.table(header_row=True, label="table", tag="table"):
         dpg.add_table_column(label="src")
         dpg.add_table_column(label="dest")
         for rec in paths:
-            with dpg.table_row:
-               dpg.add_text(rec[0])
-               dpg.add_text(rec[1])
+            with dpg.table_row():
+                for i in range(0, 2):
+                    dpg.add_text(rec[i])
+    dpg.add_button(
+        label="Update",
+        tag="table_update_button",
+        callback=table_update()
+    )
+    add_paths("./imgs", "./imgs", config)
+    #table_update()
+
 

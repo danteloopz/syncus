@@ -17,6 +17,7 @@ def run_GUI():
             hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
 
 
+        sync_table()
 
     dpg.set_primary_window("Root", True)
     dpg.create_viewport(title='Syncus - najlepsza aplikacja do synchronizacji plików', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
@@ -51,8 +52,8 @@ if __name__ == '__main__':
     else:
         conf = load_config()
         print(conf)
-        add_paths("/home/dominik","/home/dominik/Pulpit",conf)
-        conf = load_config()
-        print(conf)
+        #add_paths("./log/","./log/",conf)
+        #conf = load_config()
+        #print(conf)
         run_GUI()
     
