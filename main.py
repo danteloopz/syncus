@@ -12,11 +12,6 @@ def run_GUI():
         settings()
         current_sync()
         dpg.add_spacer(height=5), dpg.add_separator()
-        with dpg.group(horizontal=True):
-            dpg.add_spacer(width=(WIDTH - 100) / 2)
-            hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
-
-
         sync_table()
 
     dpg.set_primary_window("Root", True)

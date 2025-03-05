@@ -42,6 +42,11 @@ def hyperlink(text, address):
     dpg.bind_item_theme(hyperlink, "hyperlinkTheme")
     dpg.bind_item_font(hyperlink, link_font)
 
+def credits():
+     with dpg.group(horizontal=True, tag="credits_tag", parent="Root"):
+            dpg.add_spacer(width=(WIDTH - 100) / 2)
+            hyperlink("<Credits>", "https://github.com/danteloopz/syncus")
+
 def file_selector():
     with dpg.file_dialog(directory_selector=True, show=False, callback=update_text_input, id="kat_a_selector", width=700 ,height=400):
         dpg.add_file_extension(".*")
@@ -73,7 +78,7 @@ def new_dir(label, tag):
             dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item(tag + "_selector"))
 
 def current_sync():
-    with dpg.collapsing_header(label="Aktualne synchronizacje"):
+    with dpg.collapsing_header(label="Aktualne synchronizacje", tag="current"):
         #sync_table()
         pass
 
@@ -92,27 +97,21 @@ def change_label():
     dpg.configure_item("my_button", label="New Label")
 
 def table_update():
-    pass
-    #config = load_config()
-    #paths = config["paths"]
+    config = load_config()
+    paths = config["paths"]
+    dpg.delete_item("credits_tag")
+    dpg.delete_item("pliki", children_only=True)
+    dpg.add_table_column(label="src", parent="pliki")
+    dpg.add_table_column(label="dest", parent="pliki")
+    for rec in paths:
+        with dpg.table_row(parent="pliki"):
+            for i in range(0, 2):
+                dpg.add_text(rec[i])
 
-    #children = dpg.get_item_children("table")
+            dpg.add_text("Newly")
+            dpg.add_text("Added")
 
-    #print(children)
-    #if dpg.does_item_exist("table"):
-    #    dpg.delete_item("table")
-
-    #with dpg.table(header_row=True, label="table", tag="table"):
-    #    dpg.add_table_column(label="src")
-    #    dpg.add_table_column(label="dest")
-    #    for rec in paths:
-    #        with dpg.table_row():
-    #            for i in range(0, 2):
-    #                dpg.add_text(rec[i])
-
-                #dpg.add_text("Newly")
-                #dpg.add_text("Added")
-
+    credits()
 
     #if children.__len__() > 0:
     ##    for child in children:
@@ -126,7 +125,7 @@ def table_update():
 def sync_table():
     config = load_config()
     paths = config["paths"]
-    with dpg.table(header_row=True, label="table", tag="table"):
+    with dpg.table(header_row=True, label="pliki", tag="pliki",parent="current"):
         dpg.add_table_column(label="src")
         dpg.add_table_column(label="dest")
         for rec in paths:
@@ -136,9 +135,9 @@ def sync_table():
     dpg.add_button(
         label="Update",
         tag="table_update_button",
-        callback=table_update()
+        callback=table_update
     )
     add_paths("./imgs", "./imgs", config)
-    #table_update()
+    table_update()
 
 
