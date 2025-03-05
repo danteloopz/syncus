@@ -106,7 +106,7 @@ def cp_file(src_path, copy_path):
 def sync(src, copy):
     src_name = os.path.basename(src)
     if os.path.isdir(src):
-        copy = os.path.join(copy, src_name)
+        #copy = os.path.join(copy, src_name)
         os.makedirs(copy, exist_ok=True)
         try:
             dirlist = os.listdir(src)
@@ -118,16 +118,17 @@ def sync(src, copy):
     else:
         cp_file(src, os.path.join(copy, src_name))
 
-def sync_start(config, type):
+def sync_start(config, stype):
     paths = config["paths"]
-    if type=="scal":
+    if stype=="scal":
         for rec in paths:
             thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
             thread.run()
-    if type=="powiel":
-        if type=="scal":
-            for rec in paths:
-                thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
-                thread.run()
-                thread2 = threading.Thread(target=sync, args=(rec[1],rec[0]))
-                thread2.run()
+    if stype=="powiel":
+        pass
+        #if stype=="scal":
+        #    for rec in paths:
+        #        thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
+        #        thread.run()
+        #        thread2 = threading.Thread(target=sync, args=(rec[1],rec[0]))
+        #        thread2.run()

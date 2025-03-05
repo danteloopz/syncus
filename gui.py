@@ -6,9 +6,7 @@ import webbrowser
 WIDTH = 1000 
 HEIGHT = 600 
 LOG_DIR = "./log"
-ICON = "./imgs/appicon.ico"
-LOGO = "./imgs/logo.jpg"
-sync_type_var = "powiel"
+SYNC_TYPE = "powiel"
 
 dpg.create_context()
 setup_themes()
@@ -37,11 +35,11 @@ def callback(sender, app_data, user_data):
         table_update()
     if sender=="sync_type":
         if app_data=="Powiel":
-            sync_type_var="powiel"
+            SYNC_TYPE ="powiel"
         if app_data=="Scal":
-            sync_type_var="scal"
+            SYNC_TYPE ="scal"
     if sender=="sync":
-        sync_start(load_config, sync_type_var)
+        sync_start(load_config(), "scal")
 
 dpg.bind_font(main_font)
 

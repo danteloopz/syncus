@@ -15,7 +15,7 @@ def run_GUI():
         sync_table()
 
     dpg.set_primary_window("Root", True)
-    dpg.create_viewport(title='Syncus - najlepsza aplikacja do synchronizacji plików', width=WIDTH, height=HEIGHT, small_icon=ICON, large_icon=ICON)
+    dpg.create_viewport(title='Syncus - najlepsza aplikacja do synchronizacji plików', width=WIDTH, height=HEIGHT)
     dpg.setup_dearpygui()
     dpg.show_viewport()
     dpg.start_dearpygui()
