@@ -29,6 +29,12 @@ with dpg.font_registry():
 def callback(sender, app_data, user_data):
     print("Sender: ", sender)
     print("App Data: ", app_data)
+    if sender=="add":
+        add_paths(dpg.get_value("kat_a"),dpg.get_value("kat_b"),load_config())
+        table_update()
+    if sender=="del":
+        del_paths(dpg.get_value("kat_a"),dpg.get_value("kat_b"),load_config())
+        table_update()
 
 dpg.bind_font(main_font)
 

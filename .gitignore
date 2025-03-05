@@ -1,9 +1,9 @@
 test/
-config.json
+./config.json
 log/
 demo.py
 bin/
-
+*.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
