@@ -6,7 +6,6 @@ import webbrowser
 WIDTH = 1000 
 HEIGHT = 600 
 LOG_DIR = "./log"
-SYNC_TYPE = "powiel"
 
 dpg.create_context()
 setup_themes()
@@ -30,16 +29,21 @@ def callback(sender, app_data, user_data):
     if sender=="add":
         add_paths(dpg.get_value("kat_a"),dpg.get_value("kat_b"),load_config())
         table_update()
-    if sender=="del":
+    elif sender=="del":
         del_paths(dpg.get_value("kat_a"),dpg.get_value("kat_b"),load_config())
         table_update()
-    if sender=="sync_type":
+    elif sender=="sync_type":
         if app_data=="Powiel":
-            SYNC_TYPE ="powiel"
-        if app_data=="Scal":
-            SYNC_TYPE ="scal"
-    if sender=="sync":
-        sync_start(load_config(), "scal")
+            change_sync_type("duplicate", load_config())
+        elif app_data=="Scal":
+            change_sync_type("merge", load_config())
+    elif sender=="sync":
+        sync_start(load_config())
+    elif sender=="sync_freq":
+        change_sync_freq(app_data, load_config());
+    elif sender=="sync_status":
+        change_sync_status(app_data, load_config());
+
 
 dpg.bind_font(main_font)
 
@@ -78,20 +82,16 @@ def update_text_input(sender, app_data, user_data):
     """Updates the input text field with the selected directory path."""
     receiver_tag = sender[:-9]
     dpg.set_value(receiver_tag, str(app_data["file_path_name"]))
-    #print(receiver_tag, app_data["file_path_name"])
 
-
+def current_sync():
+    with dpg.collapsing_header(label="Aktualne synchronizacje", tag="current"):
+        pass
 
 def new_dir(label, tag):
     with dpg.group(horizontal=True):
         dpg.add_input_text(label=label, callback=callback, tag=tag)
         with dpg.group(horizontal=True):
             dpg.add_button(label="Przegladaj", callback=lambda: dpg.show_item(tag + "_selector"))
-
-def current_sync():
-    with dpg.collapsing_header(label="Aktualne synchronizacje", tag="current"):
-        #sync_table()
-        pass
 
 def buttons():
     with dpg.group(horizontal=True):
@@ -105,9 +105,6 @@ def settings():
         dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback, tag="sync_freq")
         dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback, tag="sync_status")
 
-def change_label():
-    dpg.configure_item("my_button", label="New Label")
-
 def table_update():
     config = load_config()
     paths = config["paths"]
@@ -115,24 +112,12 @@ def table_update():
     dpg.delete_item("pliki", children_only=True)
     dpg.add_table_column(label="src", parent="pliki")
     dpg.add_table_column(label="dest", parent="pliki")
-    for rec in paths:
+    for pair in config["paths"]:
         with dpg.table_row(parent="pliki"):
-            for i in range(0, 2):
-                dpg.add_text(rec[i])
-
-            dpg.add_text("Newly")
-            dpg.add_text("Added")
+            dpg.add_text(str(pair["dir_a"]))
+            dpg.add_text(str(pair["dir_b"]))
 
     credits()
-
-    #if children.__len__() > 0:
-    ##    for child in children:
-    ##       dpg.delete_item(child)
-
-    #for rec in paths:
-    #        with dpg.table_row():
-    #            for i in range(0, 2):
-    #                dpg.add_text(rec[i])
     
 def sync_table():
     config = load_config()
@@ -140,10 +125,11 @@ def sync_table():
     with dpg.table(header_row=True, label="pliki", tag="pliki",parent="current"):
         dpg.add_table_column(label="src")
         dpg.add_table_column(label="dest")
-        for rec in paths:
+        for pair in config["paths"]:
             with dpg.table_row():
-                for i in range(0, 2):
-                    dpg.add_text(rec[i])
+                dpg.add_text(str(pair["dir_a"]))
+                dpg.add_text(str(pair["dir_b"]))
+
     dpg.add_button(
         label="Update",
         tag="table_update_button",

@@ -39,16 +39,10 @@ if __name__ == '__main__':
         os.makedirs(LOG_DIR)
     logging.basicConfig(filename=os.path.join(LOG_DIR, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
-    config = load_config()
-    #sync_start(config)
+    #config = load_config()
 
     if args.cli:
         run_CLI()
     else:
-        conf = load_config()
-        print(conf)
-        #add_paths("./log/","./log/",conf)
-        #conf = load_config()
-        #print(conf)
         run_GUI()
     

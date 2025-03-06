@@ -1,9 +1,10 @@
 import os
 import shutil
-import threading
 import json
 import logging
 log = logging.getLogger(__name__)
+config_path = "./config.json"
+
 
 # Set terminal ANSI code colors
 OKGREEN = '\033[92m'
@@ -20,115 +21,185 @@ def warn(mess):
 def fail(mess):
     print(FAILRED + "[-] " + mess + ENDC)
 
+def load_config(config_file=config_path):
+    """
+    Loads the configuration from a JSON file. If the file does not exist, it creates one with
+    default content.
 
-#co to w ogule za funkcja
-def get_syncus_version():
-    ver = 1.0
-    return ver
+    Parameters:
+    - config_file (str): The path to the config JSON file.
 
-def modTime(file_path):
-    '''Get the file modification time'''
-    return os.path.getmtime(file_path)
-
-def check_os(config):
-    if config["os"] != os.name:
-        log.error("this config is not for this os")
-        exit(1)
-
-def load_config():
-    '''Load config from json file'''
-    log_path = "./config.json"
-    if os.path.exists(log_path):
-        json_config_file = open(log_path)
-        conf_content = json_config_file.read()
-        json_config_file.close()
+    Returns:
+    - dict: The configuration data as a dictionary.
+    """
+    if os.path.exists(config_file):
+        with open(config_file, 'r') as json_config_file:
+            conf_content = json_config_file.read()
     else:
         new_content = {
-            "os": os.name,
-            "sync": 60,
-            "paths": []
+            "sync_on": True,
+            "sync_freq": 60,  # Default sync frequency in seconds
+            "sync_type": "duplicate",
+            "paths": []  # Default empty list of directory pairs
         }
-        write_config(new_content)
-        config = new_content
-        check_os(config)
-        return config
+        save_config(new_content)  # Save the new config
+        return new_content
 
     config = json.loads(conf_content)
-    check_os(config)
     return config
 
-def write_config(content):
-    '''write config to json file'''
-    json_config_file = open("./config.json", "w")
-    json_config_file.write(json.dumps(content))
-    json_config_file.close()
+def save_config(config, config_file=config_path):
+    """
+    Save the updated configuration to a JSON file.
 
-def add_paths(orig_path, copy_path, config):
-    paths = config["paths"]
-    if not(os.path.isdir(copy_path)):
-        log.error("given path is no a dir")
-        return
-    paths.append([orig_path, copy_path])
-    config["paths"] = paths
-    write_config(config)
+    Parameters:
+    - config (dict): The configuration data to be saved.
+    - config_file (str): The path to the config JSON file.
+    """
+    with open(config_file, 'w') as file:
+        json.dump(config, file, indent=4)
 
-def del_paths(orig_path, copy_path, config):
-    paths = config["paths"]
-    paths.remove([orig_path, copy_path])
-    config["paths"] = paths
-    write_config(config)
+# Get the list of files from source dir that are newer than in destination dir
+def get_newer_files(src_dir, dest_dir):
+    """
+    Returns a list of files from src_dir that are newer than in dest_dir.
+    """
+    newer_files = []
+    for src_file in os.listdir(src_dir):
+        src_file_path = os.path.join(src_dir, src_file)
+        dest_file_path = os.path.join(dest_dir, src_file)
 
-def set_sync_time(sec, config):
-    config["sync"] = sec
-    write_config(config)
-
-def cp_file(src_path, copy_path):
-    try:
-        copy_file = open(copy_path)
-    except:
-        try:
-            shutil.copyfile( src_path, copy_path, follow_symlinks=True)
-        except:
-            log.error("user doesn't have rights to: " + copy_path)
-    else:    
-        srcT = modTime(src_path)
-        copyT = modTime(copy_path)
-        if copyT > srcT:
-            try:
-                shutil.copyfile( src_path, copy_path, follow_symlinks=True)
-                log.info("copying: " + src_path)
-            except:
-                log.error("user doesn't have rights to: " + copy_path)
+        # Check if the file exists in dest_dir and compare timestamps
+        if os.path.exists(dest_file_path):
+            if os.path.getmtime(src_file_path) > os.path.getmtime(dest_file_path):
+                newer_files.append(src_file)
         else:
-            log.info("file wasn't modified: " + src_path)
+            # If file doesn't exist in dest_dir, it's considered newer
+            newer_files.append(src_file)
+
+    return newer_files
+
+def sync_merge(dir_a, dir_b):
+    """
+    Sync files and directories from dir_a to dir_b by copying newer files from dir_a to dir_b.
+    Copies all directories and files, maintaining the structure.
+    """
+    for dirpath, dirnames, filenames in os.walk(dir_a):
+        # Determine the corresponding destination directory
+        rel_path = os.path.relpath(dirpath, dir_a)
+        dest_dir = os.path.join(dir_b, rel_path)
+
+        # Create the destination directory if it doesn't exist
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
+
+        for file in filenames:
+            src_file_path = os.path.join(dirpath, file)
+            dest_file_path = os.path.join(dest_dir, file)
+
+            # Check if it's a file and copy if it's newer
+            if os.path.isfile(src_file_path):
+                if not os.path.exists(dest_file_path) or os.path.getmtime(src_file_path) > os.path.getmtime(dest_file_path):
+                    shutil.copy(src_file_path, dest_file_path)
+
+def sync_duplicate(dir_a, dir_b):
+    """
+    Sync all files and directories from dir_a to dir_b, adding version suffix to duplicates.
+    Copies all directories and files, maintaining the structure.
+    """
+    for dirpath, dirnames, filenames in os.walk(dir_a):
+        # Determine the corresponding destination directory
+        rel_path = os.path.relpath(dirpath, dir_a)
+        dest_dir = os.path.join(dir_b, rel_path)
+
+        # Create the destination directory if it doesn't exist
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
+
+        for file in filenames:
+            src_file_path = os.path.join(dirpath, file)
+            dest_file_path = os.path.join(dest_dir, file)
+
+            # Check if it's a file and handle duplicates by adding a version suffix
+            if os.path.isfile(src_file_path):
+                if os.path.exists(dest_file_path):
+                    base, ext = os.path.splitext(file)
+                    version = 1
+                    # Generate a new file name with a version suffix until it's unique
+                    while os.path.exists(os.path.join(dest_dir, f"{base}_ver_{version}{ext}")):
+                        version += 1
+                    dest_file_path = os.path.join(dest_dir, f"{base}_ver_{version}{ext}")
+
+                shutil.copy(src_file_path, dest_file_path)
+
+
+def sync_start(config, sync_type):
+    """
+    Start the sync process based on the given config and sync_type.
+    sync_type can be either "merge" or "duplicate".
+    """
+    for pair in config["paths"]:
+        dir_a = pair["dir_a"]
+        dir_b = pair["dir_b"]
+        
+        if sync_type == "merge":
+            sync_merge(dir_a, dir_b)
+        elif sync_type == "duplicate":
+            sync_duplicate(dir_a, dir_b)
+        else:
             return
 
-def sync(src, copy):
-    src_name = os.path.basename(src)
-    if os.path.isdir(src):
-        #copy = os.path.join(copy, src_name)
-        os.makedirs(copy, exist_ok=True)
-        try:
-            dirlist = os.listdir(src)
-        except PermissionError:
-            log.error("user doesn't have permissions for: " + src)
+# Function to add a new directory pair to the config
+def add_paths(dir_a, dir_b, config):
+    """
+    Adds a new directory pair (dir_a, dir_b) to the config.
+    """
+    # Check if the directory pair already exists
+    for pair in config["paths"]:
+        if pair["dir_a"] == dir_a and pair["dir_b"] == dir_b:
             return
-        for rec in dirlist:
-            sync(src=os.path.join(src, rec),copy=copy)
-    else:
-        cp_file(src, os.path.join(copy, src_name))
 
-def sync_start(config, stype):
-    paths = config["paths"]
-    if stype=="scal":
-        for rec in paths:
-            thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
-            thread.run()
-    if stype=="powiel":
-        pass
-        #if stype=="scal":
-        #    for rec in paths:
-        #        thread = threading.Thread(target=sync, args=(rec[0],rec[1]))
-        #        thread.run()
-        #        thread2 = threading.Thread(target=sync, args=(rec[1],rec[0]))
-        #        thread2.run()
+    if not(os.path.isdir(dir_a)):
+        return
+    
+    # Add the new pair to the directory list
+    config["paths"].append({"dir_a": dir_a, "dir_b": dir_b})
+    
+    # Save the updated config
+    save_config(config)
+
+# Function to delete a directory pair from the config
+def del_paths(dir_a, dir_b, config):
+    """
+    Deletes a directory pair (dir_a, dir_b) from the config.
+    """
+    # Find and remove the pair from the directories list
+    for pair in config["paths"]:
+        if pair["dir_a"] == dir_a and pair["dir_b"] == dir_b:
+            config["paths"].remove(pair)
+            # Save the updated config
+            save_config(config)
+            return
+
+def change_sync_type(sync_type, config):
+    """
+    Change sync_type
+    """
+    config["sync_type"] = sync_type
+    save_config(config)
+
+def change_sync_freq(sync_freq, config):
+    """
+    Change sync_freq
+    """
+    config["sync_freq"] = sync_freq
+    save_config(config)
+
+def change_sync_status(sync_status, config):
+    """
+    Change sync_freq
+    """
+    config["sync_on"] = sync_status
+    save_config(config)
+
+
