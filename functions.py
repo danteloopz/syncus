@@ -205,7 +205,6 @@ def change_sync_status(sync_status, config):
     config["sync_on"] = sync_status
     save_config(config)
 
-
 def run_sync():
         while True:
             config = load_config()  # Reload config to get updated settings

@@ -40,6 +40,7 @@ if __name__ == '__main__':
     logging.basicConfig(filename=os.path.join(LOG_DIR, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
 
+    load_config()
     sync_thread = threading.Thread(target=run_sync, daemon=True)
     sync_thread.start()
 

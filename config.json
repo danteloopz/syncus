@@ -1,11 +1,6 @@
 {
     "sync_on": false,
-    "sync_freq": 0,
-    "sync_type": "merge",
-    "paths": [
-        {
-            "dir_a": "/home/dntlp/t1",
-            "dir_b": "/home/dntlp/t2"
-        }
-    ]
+    "sync_freq": 60,
+    "sync_type": "duplicate",
+    "paths": []
 }
