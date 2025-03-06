@@ -2,9 +2,12 @@ import os
 import shutil
 import json
 import logging
+import threading
+import time
+
 log = logging.getLogger(__name__)
 config_path = "./config.json"
-
+sync_lock = threading.Lock()  # Lock to prevent multiple instances
 
 # Set terminal ANSI code colors
 OKGREEN = '\033[92m'
@@ -203,3 +206,13 @@ def change_sync_status(sync_status, config):
     save_config(config)
 
 
+def run_sync():
+        while True:
+            config = load_config()  # Reload config to get updated settings
+            if config.get("sync_on", False):  # Check if sync is enabled
+                if sync_lock.acquire(blocking=False):  # Try to acquire lock
+                    try:
+                        sync_start(config)
+                    finally:
+                        sync_lock.release()  # Release lock after sync is done
+            time.sleep(config.get("sync_freq", 60))  # Wait for the next sync

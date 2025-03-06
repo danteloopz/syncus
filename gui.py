@@ -105,11 +105,17 @@ def settings():
         dpg.add_slider_int(label="Czestotliwosc synchronizacji (co ile min.)", max_value=60, callback=callback, tag="sync_freq")
         dpg.add_checkbox(label="Wl/Wyl synchronizacje", callback=callback, tag="sync_status")
 
-def table_update():
+def table_update(initial_run = False):
     config = load_config()
     paths = config["paths"]
-    dpg.delete_item("credits_tag")
-    dpg.delete_item("pliki", children_only=True)
+    if (not initial_run):
+        dpg.delete_item("credits_tag")
+        dpg.delete_item("pliki", children_only=True)
+    else:
+        with dpg.table(header_row=True, label="pliki", tag="pliki",parent="current"):
+            pass
+
+
     dpg.add_table_column(label="src", parent="pliki")
     dpg.add_table_column(label="dest", parent="pliki")
     for pair in config["paths"]:
@@ -118,23 +124,3 @@ def table_update():
             dpg.add_text(str(pair["dir_b"]))
 
     credits()
-    
-def sync_table():
-    config = load_config()
-    paths = config["paths"]
-    with dpg.table(header_row=True, label="pliki", tag="pliki",parent="current"):
-        dpg.add_table_column(label="src")
-        dpg.add_table_column(label="dest")
-        for pair in config["paths"]:
-            with dpg.table_row():
-                dpg.add_text(str(pair["dir_a"]))
-                dpg.add_text(str(pair["dir_b"]))
-
-    dpg.add_button(
-        label="Update",
-        tag="table_update_button",
-        callback=table_update
-    )
-    table_update()
-
-

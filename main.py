@@ -12,7 +12,7 @@ def run_GUI():
         settings()
         current_sync()
         dpg.add_spacer(height=5), dpg.add_separator()
-        sync_table()
+        table_update(True)
 
     dpg.set_primary_window("Root", True)
     dpg.create_viewport(title='Syncus - najlepsza aplikacja do synchronizacji plików', width=WIDTH, height=HEIGHT)
@@ -39,7 +39,9 @@ if __name__ == '__main__':
         os.makedirs(LOG_DIR)
     logging.basicConfig(filename=os.path.join(LOG_DIR, "syncus.log"), level=logging.INFO)
     log.info("started syncus")
-    #config = load_config()
+
+    sync_thread = threading.Thread(target=run_sync, daemon=True)
+    sync_thread.start()
 
     if args.cli:
         run_CLI()
