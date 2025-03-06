@@ -2,5 +2,10 @@
     "sync_on": true,
     "sync_freq": 60,
     "sync_type": "duplicate",
-    "paths": []
+    "paths": [
+        {
+            "dir_a": "/home/dntlp/t2",
+            "dir_b": "/home/dntlp/t3"
+        }
+    ]
 }

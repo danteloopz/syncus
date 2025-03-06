@@ -133,7 +133,7 @@ def sync_duplicate(dir_a, dir_b):
                 shutil.copy(src_file_path, dest_file_path)
 
 
-def sync_start(config, sync_type):
+def sync_start(config):
     """
     Start the sync process based on the given config and sync_type.
     sync_type can be either "merge" or "duplicate".
@@ -142,9 +142,9 @@ def sync_start(config, sync_type):
         dir_a = pair["dir_a"]
         dir_b = pair["dir_b"]
         
-        if sync_type == "merge":
+        if config["sync_type"] == "merge":
             sync_merge(dir_a, dir_b)
-        elif sync_type == "duplicate":
+        elif config["sync_type"] == "duplicate":
             sync_duplicate(dir_a, dir_b)
         else:
             return
